@@ -1,5 +1,7 @@
 const { chromium } = require('playwright');
 const HomePage = require('../models/Home.page');
+const ProductCollection = require('../models/ProductCollection.page')
+const ProductDetail = require('../models/ProductDetail.page')
 
 describe('Gamestop demo purchase test', () => {
     // jest.setTimeout(30000);
@@ -7,13 +9,14 @@ describe('Gamestop demo purchase test', () => {
     let context = null;
     let page = null;
     let homePage = null;
-    let loginPage = null;
 
     beforeAll(async () => {
         browser = await chromium.launch({ headless: false, slowMo: 300 });
         context = await browser.newContext();
         page = await context.newPage();
         homePage = new HomePage(page);
+        productCollectionPage = new ProductCollection(page);
+        productDetailsPage = new ProductDetail(page);
         await homePage.navigate();
     })
 
@@ -49,7 +52,12 @@ describe('Gamestop demo purchase test', () => {
     })
 
     it('should click on a desired product', async () => {
-        
+       await productCollectionPage.clickOnProduct()
+       expect(await page.title()).toBe('God of War Ragnarok - PS5 | PlayStation 5 | GameStop')
+    })
+    
+    it('should have the correct product name on the details page', async () => {
+        //expect(await productDetailsPage.getProductTitle()).toBe('God of War Ragnarok Standard Edition - PlayStation 5')
     })
 
     it('should be for the playstation console', async () => {
