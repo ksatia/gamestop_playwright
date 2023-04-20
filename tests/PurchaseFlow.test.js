@@ -1,22 +1,25 @@
-const { chromium } = require('playwright');
-const HomePage = require('../models/Home.page');
-const ProductCollection = require('../models/ProductCollection.page')
-const ProductDetail = require('../models/ProductDetail.page')
+const { webkit } = require('playwright');
+const HomePage = require('../pom/models/Home.page')
+const ProductCollection = require('../pom/models/ProductCollection.page')
+const ProductDetail = require('../pom/models/ProductDetail.page')
+const Checkout = require('../pom/models/Checkout.page')
 
 describe('Gamestop demo purchase test', () => {
-    // jest.setTimeout(30000);
+    jest.setTimeout(20000);
     let browser = null;
     let context = null;
     let page = null;
     let homePage = null;
 
     beforeAll(async () => {
-        browser = await chromium.launch({ headless: false, slowMo: 300 });
+        //, slowMo: 300 
+        browser = await webkit.launch({ headless: false });
         context = await browser.newContext();
         page = await context.newPage();
         homePage = new HomePage(page);
         productCollectionPage = new ProductCollection(page);
         productDetailsPage = new ProductDetail(page);
+        checkoutPage = new Checkout(page);
         await homePage.navigate();
     })
 
@@ -52,44 +55,58 @@ describe('Gamestop demo purchase test', () => {
     })
 
     it('should click on a desired product', async () => {
-       await productCollectionPage.clickOnProduct()
-       expect(await page.title()).toBe('God of War Ragnarok - PS5 | PlayStation 5 | GameStop')
+        await productCollectionPage.clickOnProduct()
+        expect(await page.title()).toBe('God of War Ragnarok - PS5 | PlayStation 5 | GameStop')
     })
-    
+
     it('should have the correct product name on the details page', async () => {
-        //expect(await productDetailsPage.getProductTitle()).toBe('God of War Ragnarok Standard Edition - PlayStation 5')
+        expect(await productDetailsPage.getProductTitle()).toBe('God of War Ragnarok Standard Edition - PlayStation 5')
     })
 
     it('should be for the playstation console', async () => {
-
+        expect(await productDetailsPage.getProductConsole()).toBe('PlayStation 5')
     })
 
     it('should have new selected for product condition', async () => {
-
+        expect(await productDetailsPage.selectProductCondition()).toBe('New')
     })
 
+    it('should add product to cart', async () => {
+        expect(await productDetailsPage.addToCart()).toBe('Added to Cart')
+    })
+
+    it('should navigate to the checkout page', async () => {
+        await productDetailsPage.clickOnCart()
+        expect (await page.title()).toBe('Cart | GameStop')
+    })
+
+    it('should have the correct product in cart', async() => {
+        expect(await checkoutPage.getProductName()).toBe('God of War Ragnarok Standard Edition - PlayStation 5')
+    })
+
+    it('should not have more than one copy of product in cart', async () => {
+        expect(await checkoutPage.getProductQuantity()).toBe('Qty 1')
+    })
+    
+    it('should have delivery set to today', async () => {
+        await checkoutPage.setDeliveryTime()
+    })
 
 })
 
 /*
 // models
 product description page class
-    selector for title, ps5, maybe query param, etc, "new" option, add to cart
-    function for getting inner text of title, console, clicking the new buton, clicking add to cart
 checkout page class
-    navigating to checkout page
     filling in details -> do the rest first
     
 
 // tests(specs)
-verify that homepage is gamestop home page (page title is not null)
-on typing in god of war - assert page title is not null
-verify that you are on a search results page (figure out what that looks like)
-
-verify query param in title OR verify wherever god of war is typed out
 
 clicking on product - verify it is for ps5, that title is god of war, maybe snapshot
 comparison for box art
+
+just call method to fill in fields, assert that the fields are actually filled up
 
 
 */
