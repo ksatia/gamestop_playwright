@@ -1,50 +1,22 @@
-const BasePage = require('./Base.page')
-class CheckoutPage extends BasePage {
-    constructor(page) {
-        super(page)
+// import { test, expect } from '@playwright/test';
 
-        // locators
-        this.productName = '.product-name > a'
-        this.productQuantity = '#quantity'
-        this.todayDeliveryBtn = '.shipping-option-label small font-bold disabled'
-        this.addressModal = '.modal-body'
-        this.addressModalStreet = '#address1'
-        this.addressModalCity = '#city'
-        this.addressModalStateDrp = '#state'
-        this.addressModalZip = '#zipCode'
-        this.subTotal
-    }
-
-    async getProductName() {
-        return (await this.page.locator(this.productName).innerText())
-    }
-
-    async getProductQuantity() {
-        return (await this.page.locator(this.productQuantity).locator('option').nth(0)).innerText()
-    }
-
-    async setDeliveryTime() {
-        await this.page.click(this.todayDeliveryLabel)
-//getByText('New', {exact: true}).nth(1).click()
-// await page.getByRole('button', { name: 'View Cart & Checkout' }).click();
-
-
-
-        // enter address into fields
-        // let addressModalFields = await this.page.locator(this.addressModal)
-        // await successModalFields.isVisible()
-        // await this.page.fill(this.addressModalStreet, '300 E 93rd Street')
-        // await this.page.fill(this.addressModalCity, 'Brooklyn')
-        
-        // click "verify address"
-        // verify that the radio isChecked()
-
-       //return (await this.page.locator(this.deliveryTimeOptions, { has: await this.page.locator('role=radio') }))
-    }
-
-
-}
-
-module.exports = CheckoutPage
-
-/*
+// test('test', async ({ page }) => {
+//   await page.getByRole('link', { name: 'Guest checkout' }).click();
+//   await page.getByRole('textbox', { name: 'First Name' }).click();
+//   await page.getByRole('textbox', { name: 'First Name' }).fill('karan');
+//   await page.getByRole('textbox', { name: 'Last Name' }).click();
+//   await page.getByRole('textbox', { name: 'Last Name' }).fill('test');
+//   await page.getByRole('textbox', { name: 'Street Address' }).click();
+//   await page.getByRole('textbox', { name: 'Street Address' }).click();
+//   await page.getByRole('textbox', { name: 'Street Address' }).fill('300 east 93rd street');
+//   await page.getByText('East 93rd Street').first().click();
+//   await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
+//   await page.getByRole('textbox', { name: 'Phone Number' }).click();
+//   await page.getByRole('textbox', { name: 'Phone Number' }).fill('917 406 2088');
+//   await page.getByRole('textbox', { name: 'Phone Number' }).click();
+//   await page.getByRole('textbox', { name: 'Phone Number' }).click();
+//   await page.getByRole('textbox', { name: 'Phone Number' }).press('Meta+a');
+//   await page.getByRole('textbox', { name: 'Phone Number' }).fill('917 212 5994');
+//   await page.getByRole('button', { name: 'Save & Continue' }).click();
+//   await page.getByRole('button', { name: 'Use Proposed Address' }).click();
+// });

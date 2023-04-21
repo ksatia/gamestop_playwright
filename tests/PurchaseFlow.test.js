@@ -1,8 +1,9 @@
+const { expect } = require('@playwright/test');
 const { webkit } = require('playwright');
 const HomePage = require('../pom/models/Home.page')
 const ProductCollection = require('../pom/models/ProductCollection.page')
 const ProductDetail = require('../pom/models/ProductDetail.page')
-const Checkout = require('../pom/models/Checkout.page')
+const UserCart = require('../pom/models/UserCart.page')
 
 describe('Gamestop demo purchase test', () => {
     jest.setTimeout(20000);
@@ -19,7 +20,7 @@ describe('Gamestop demo purchase test', () => {
         homePage = new HomePage(page);
         productCollectionPage = new ProductCollection(page);
         productDetailsPage = new ProductDetail(page);
-        checkoutPage = new Checkout(page);
+        userCart = new UserCart(page);
         await homePage.navigate();
     })
 
@@ -77,19 +78,31 @@ describe('Gamestop demo purchase test', () => {
 
     it('should navigate to the checkout page', async () => {
         await productDetailsPage.clickOnCart()
-        expect (await page.title()).toBe('Cart | GameStop')
+        expect(await page.title()).toBe('Cart | GameStop')
     })
 
-    it('should have the correct product in cart', async() => {
-        expect(await checkoutPage.getProductName()).toBe('God of War Ragnarok Standard Edition - PlayStation 5')
+    it('should have the correct product in cart', async () => {
+        expect(await userCart.getProductName()).toBe('God of War Ragnarok Standard Edition - PlayStation 5')
     })
 
     it('should not have more than one copy of product in cart', async () => {
-        expect(await checkoutPage.getProductQuantity()).toBe('Qty 1')
+        expect(await userCart.getProductQuantity()).toBe('Qty 1')
     })
-    
-    it('should have delivery set to today', async () => {
-        await checkoutPage.setDeliveryTime()
+
+    // it('should have delivery set to today', async () => {
+    //     await userCart.setDeliveryTime()
+    // })
+
+    it('should have the correct subtotal amount', async () => {
+        expect(await userCart.getCartSubtotal()).toBe('$69.99')
+    })
+
+    it('should proceed to checkout page', async () => {
+        await userCart.proceedToCheckout()
+        await userCart.checkoutAsGuest()
+        await page.on('load', loadedPage => {
+            expect(loadedPage.title()).toBe('Checkout | GameStop')
+        })
     })
 
 })
