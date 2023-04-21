@@ -106,7 +106,8 @@ describe('Gamestop demo purchase test', () => {
             expect(loadedPage.title()).toBe('Checkout | GameStop')
         })
     })
-
+    
+    // test browser won't show the final page being filled in - unsure why
     it('should fill out required fields for checkout', async () => {
         await page.on('load', loadedPage => {
             checkoutPage.enterFirstName()
