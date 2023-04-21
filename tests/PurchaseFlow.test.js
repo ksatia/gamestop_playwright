@@ -4,6 +4,7 @@ const HomePage = require('../pom/models/Home.page')
 const ProductCollection = require('../pom/models/ProductCollection.page')
 const ProductDetail = require('../pom/models/ProductDetail.page')
 const UserCart = require('../pom/models/UserCart.page')
+const Checkout = require('../pom/models/Checkout.page')
 
 describe('Gamestop demo purchase test', () => {
     jest.setTimeout(20000);
@@ -21,6 +22,7 @@ describe('Gamestop demo purchase test', () => {
         productCollectionPage = new ProductCollection(page);
         productDetailsPage = new ProductDetail(page);
         userCart = new UserCart(page);
+        checkoutPage = new Checkout(page)
         await homePage.navigate();
     })
 
@@ -105,21 +107,16 @@ describe('Gamestop demo purchase test', () => {
         })
     })
 
+    it('should fill out required fields for checkout', async () => {
+        await page.on('load', loadedPage => {
+            checkoutPage.enterFirstName()
+            checkoutPage.enterLastName()
+            checkoutPage.enterAddress()
+            checkoutPage.enterEmail()
+            checkoutPage.enterPhoneNumber()
+            checkoutPage.saveInfoAndContinue()
+            checkoutPage.acceptProposedAdress()
+        })
+    })
+
 })
-
-/*
-// models
-product description page class
-checkout page class
-    filling in details -> do the rest first
-    
-
-// tests(specs)
-
-clicking on product - verify it is for ps5, that title is god of war, maybe snapshot
-comparison for box art
-
-just call method to fill in fields, assert that the fields are actually filled up
-
-
-*/
